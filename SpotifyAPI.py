@@ -2,8 +2,8 @@ import requests
 import base64
 
 # Spotify API credentials
-client_id = "5ec05cefccd647058cffeac2d91dc387"
-client_secret = "65e2c4321945442ba9eed181ee529548"
+client_id = "your client id"
+client_secret = "your client secret"
 
 
 def get_access_token(client_id, client_secret):
