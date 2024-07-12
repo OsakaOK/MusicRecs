@@ -60,3 +60,45 @@ def fetch_album_info(access_token, album_id):
         f"https://api.spotify.com/v1/albums/{album_id}", headers=headers
     )
     return response.json() if response.status_code == 200 else None
+
+
+# Functions to enhance the recommendation
+def get_recommendations(access_token, seed_tracks, limit=10):
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+    }
+    params = {
+        "seed_tracks": ",".join(seed_tracks),
+        "limit": limit,  # Number of tracks you want it to recommend change above parameter
+    }
+    response = requests.get(
+        "https://api.spotify.com/v1/recommendations", headers=headers, params=params
+    )
+    return response.json() if response.status_code == 200 else None
+
+
+def get_related_artists(access_token, artist_id, limit=10):
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+    }
+    response = requests.get(
+        f"https://api.spotify.com/v1/artists/{artist_id}/related-artists",
+        headers=headers,
+    )
+    related_artists = response.json() if response.status_code == 200 else None
+    if related_artists and "artists" in related_artists:
+        return related_artists["artists"][:limit]
+    return None
+
+
+# def get_album_tracks(access_token, album_id, limit=10):
+#     headers = {
+#         "Authorization": f"Bearer {access_token}",
+#     }
+#     response = requests.get(
+#         f"https://api.spotify.com/v1/albums/{album_id}/tracks", headers=headers
+#     )
+#     album_tracks = response.json() if response.status_code == 200 else None
+#     if album_tracks and "items" in album_tracks:
+#         return album_tracks["items"][:limit]
+#     return None
