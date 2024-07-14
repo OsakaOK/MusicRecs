@@ -8,7 +8,6 @@ from SpotifyAPI import (
     fetch_album_info,
     search_spotify,
     get_recommendations,
-    get_album_tracks,
     get_related_artists,
 )
 
@@ -28,30 +27,15 @@ def recommend_tracks(access_token, track_id, limit=10):
     return cleaned_recommendations
 
 
-def recommend_artists(access_token, artist_id, limit=10):
-    related_artists = get_related_artists(access_token, artist_id, limit)
-    if not related_artists:
-        print("Failed to fetch related artists.")
-        return []
+def recommend_artists(access_token, artist_ids, limit=10):
+    all_related_artists = []
+    for artist_id in artist_ids:
+        related_artists = get_related_artists(access_token, artist_id, limit)
+        if related_artists:
+            all_related_artists.extend(related_artists)
 
-    cleaned_artists = clean_artist_data(related_artists)
+    cleaned_artists = clean_artist_data(all_related_artists[:limit])
     return cleaned_artists
-
-
-# def recommend_album_tracks(access_token, album_id, limit=10):
-#     album_info = fetch_album_info(access_token, album_id)
-#     if not album_info:
-#         print("Failed to fetch album info.")
-#         return []
-
-#     album_name = album_info["name"]
-#     album_tracks = get_album_tracks(access_token, album_id, limit)
-#     if not album_tracks:
-#         print("Failed to fetch album tracks.")
-#         return []
-
-#     cleaned_tracks = clean_track_data(album_tracks, album_name)
-#     return cleaned_tracks
 
 
 # Clean the format to display it nicely
@@ -87,24 +71,38 @@ def main():
         print("Failed to obtain access token.")
         return
 
-    query = input("Enter the name of the track, artist, or album: ")
-    search_type = input("Enter the type (track, artist, album): ").lower()
+    query = input("Enter the name of the track or artist: ")
+    search_type = input("Enter the type (track or artist): ").lower()
+    search_limit = int(input("Enter the number of search results to display: "))
+    limit = int(input("Enter the number of recommendations: "))
 
-    search_results = search_spotify(access_token, query, search_type)
+    search_results = search_spotify(
+        access_token, query, search_type, limit=search_limit
+    )
 
-    # Get recommend Track, Artist or Album from the input
+    # Get recommend Track or Artist from the input
     if (
         search_type == "track"
         and "tracks" in search_results
         and "items" in search_results["tracks"]
         and search_results["tracks"]["items"]
     ):
-        track_id = search_results["tracks"]["items"][0]["id"]
-        recommendations = recommend_tracks(
-            access_token,
-            track_id,
+        print("Search Results:")
+        for idx, track in enumerate(search_results["tracks"]["items"]):
+            track_name = track["name"]
+            artist_names = ", ".join([artist["name"] for artist in track["artists"]])
+            print(f"{idx + 1}: {track_name} by {artist_names}")
+
+        track_selection = (
+            int(input("Enter the number of the track you want recommendations for: "))
+            - 1
         )
-        print("Recommended Tracks:", json.dumps(recommendations, indent=4))
+        if 0 <= track_selection < len(search_results["tracks"]["items"]):
+            track_id = search_results["tracks"]["items"][track_selection]["id"]
+            recommendations = recommend_tracks(access_token, track_id, limit)
+            print("Recommended Tracks:", json.dumps(recommendations, indent=4))
+        else:
+            print("Invalid selection.")
 
     elif (
         search_type == "artist"
@@ -112,19 +110,21 @@ def main():
         and "items" in search_results["artists"]
         and search_results["artists"]["items"]
     ):
-        artist_id = search_results["artists"]["items"][0]["id"]
-        recommendations = recommend_artists(access_token, artist_id)
-        print("Related Artists:", json.dumps(recommendations, indent=4))
+        print("Search Results:")
+        for idx, artist in enumerate(search_results["artists"]["items"]):
+            artist_name = artist["name"]
+            print(f"{idx + 1}: {artist_name}")
 
-    # elif (
-    #     search_type == "album"
-    #     and "albums" in search_results
-    #     and "items" in search_results["albums"]
-    #     and search_results["albums"]["items"]
-    # ):
-    #     album_id = search_results["albums"]["items"][0]["id"]
-    #     recommendations = recommend_album_tracks(access_token, album_id)
-    #     print("Album Tracks:", json.dumps(recommendations, indent=4))
+        artist_selection = (
+            int(input("Enter the number of the artist you want recommendations for: "))
+            - 1
+        )
+        if 0 <= artist_selection < len(search_results["artists"]["items"]):
+            artist_id = search_results["artists"]["items"][artist_selection]["id"]
+            recommendations = recommend_artists(access_token, [artist_id], limit)
+            print("Related Artists:", json.dumps(recommendations, indent=4))
+        else:
+            print("Invalid selection.")
 
     else:
         print("No results found.")

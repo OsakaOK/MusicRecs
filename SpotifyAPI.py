@@ -21,17 +21,22 @@ def get_access_token(client_id, client_secret):
     return response_data.get("access_token")
 
 
-def search_spotify(access_token, query, search_type):
+def search_spotify(access_token, query, search_type, limit=10):
     headers = {
         "Authorization": f"Bearer {access_token}",
     }
-    params = {"q": query, "type": search_type, "limit": 1}
+    params = {
+        "q": query,
+        "type": search_type,
+        "limit": limit,  # Increase limit to get more results
+    }
     response = requests.get(
         "https://api.spotify.com/v1/search", headers=headers, params=params
     )
     return response.json()
 
 
+# Fetching data to display
 def fetch_track_info(access_token, track_id):
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -63,7 +68,7 @@ def fetch_album_info(access_token, album_id):
 
 
 # Functions to enhance the recommendation
-def get_recommendations(access_token, seed_tracks, limit=10):
+def get_recommendations(access_token, seed_tracks, limit):
     headers = {
         "Authorization": f"Bearer {access_token}",
     }
@@ -77,7 +82,7 @@ def get_recommendations(access_token, seed_tracks, limit=10):
     return response.json() if response.status_code == 200 else None
 
 
-def get_related_artists(access_token, artist_id, limit=10):
+def get_related_artists(access_token, artist_id, limit):
     headers = {
         "Authorization": f"Bearer {access_token}",
     }
@@ -89,16 +94,3 @@ def get_related_artists(access_token, artist_id, limit=10):
     if related_artists and "artists" in related_artists:
         return related_artists["artists"][:limit]
     return None
-
-
-# def get_album_tracks(access_token, album_id, limit=10):
-#     headers = {
-#         "Authorization": f"Bearer {access_token}",
-#     }
-#     response = requests.get(
-#         f"https://api.spotify.com/v1/albums/{album_id}/tracks", headers=headers
-#     )
-#     album_tracks = response.json() if response.status_code == 200 else None
-#     if album_tracks and "items" in album_tracks:
-#         return album_tracks["items"][:limit]
-#     return None
