@@ -3,9 +3,9 @@ import base64
 import json
 from SpotifyAPI import (
     get_access_token,
-    fetch_track_info,
-    fetch_artist_info,
-    fetch_album_info,
+    # fetch_track_info,
+    # fetch_artist_info,
+    # fetch_album_info,
     search_spotify,
     get_recommendations,
     get_related_artists,
@@ -40,28 +40,34 @@ def recommend_artists(access_token, artist_ids, limit=10):
 
 # Clean the format to display it nicely
 def clean_track_data(tracks, album_name=None):
+    seen_ids = set()
     cleaned_tracks = []
     for track in tracks:
-        cleaned_track = {
-            "name": track["name"],
-            "id": track["id"],
-            "artists": [artist["name"] for artist in track["artists"]],
-            "album": album_name if album_name else track.get("album", {}).get("name"),
-        }
-        cleaned_tracks.append(cleaned_track)
+        if track["id"] not in seen_ids:
+            seen_ids.add(track["id"])
+            cleaned_track = {
+                "name": track["name"],
+                "id": track["id"],
+                "artists": [artist["name"] for artist in track["artists"]],
+                "album": track.get("album", {}).get("name", "Unknown Album"),
+            }
+            cleaned_tracks.append(cleaned_track)
     return cleaned_tracks
 
 
 def clean_artist_data(artists):
+    seen_ids = set()
     cleaned_artists = []
     for artist in artists:
-        cleaned_artist = {
-            "name": artist["name"],
-            "id": artist["id"],
-            "genres": artist["genres"],
-            "popularity": artist["popularity"],
-        }
-        cleaned_artists.append(cleaned_artist)
+        if artist["id"] not in seen_ids:
+            seen_ids.add(artist["id"])
+            cleaned_artist = {
+                "name": artist["name"],
+                "id": artist["id"],
+                "genres": artist.get("genres", []),
+                "popularity": artist.get("popularity", 0),
+            }
+            cleaned_artists.append(cleaned_artist)
     return cleaned_artists
 
 

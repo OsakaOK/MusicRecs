@@ -36,35 +36,35 @@ def search_spotify(access_token, query, search_type, limit=10):
     return response.json()
 
 
-# Fetching data to display
-def fetch_track_info(access_token, track_id):
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
-    response = requests.get(
-        f"https://api.spotify.com/v1/tracks/{track_id}", headers=headers
-    )
-    return response.json() if response.status_code == 200 else None
+# # Fetching data to display
+# def fetch_track_info(access_token, track_id):
+#     headers = {
+#         "Authorization": f"Bearer {access_token}",
+#     }
+#     response = requests.get(
+#         f"https://api.spotify.com/v1/tracks/{track_id}", headers=headers
+#     )
+#     return response.json() if response.status_code == 200 else None
 
 
-def fetch_artist_info(access_token, artist_id):
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
-    response = requests.get(
-        f"https://api.spotify.com/v1/artists/{artist_id}", headers=headers
-    )
-    return response.json() if response.status_code == 200 else None
+# def fetch_artist_info(access_token, artist_id):
+#     headers = {
+#         "Authorization": f"Bearer {access_token}",
+#     }
+#     response = requests.get(
+#         f"https://api.spotify.com/v1/artists/{artist_id}", headers=headers
+#     )
+#     return response.json() if response.status_code == 200 else None
 
 
-def fetch_album_info(access_token, album_id):
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-    }
-    response = requests.get(
-        f"https://api.spotify.com/v1/albums/{album_id}", headers=headers
-    )
-    return response.json() if response.status_code == 200 else None
+# def fetch_album_info(access_token, album_id):
+#     headers = {
+#         "Authorization": f"Bearer {access_token}",
+#     }
+#     response = requests.get(
+#         f"https://api.spotify.com/v1/albums/{album_id}", headers=headers
+#     )
+#     return response.json() if response.status_code == 200 else None
 
 
 # Functions to enhance the recommendation
