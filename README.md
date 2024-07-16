@@ -12,3 +12,6 @@ Add couple function to fetch data from API and test with input for program to gi
 
 _NEW_
 CHANGED UP: now user can search up same track or artist name and have an option to choose which one they want to get recommendation based on. Also user can choose to the limit for search result and recommendations
+
+_Update_
+improve the search display results to removed any duplicate tracks show up
