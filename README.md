@@ -21,3 +21,7 @@ improve the search display results to removed any duplicate tracks show up
 _Update_
 
 Add in MongoDB to store the input from user to prevent the usage of API calls
+
+_Update_
+
+Add flask to be able to run the web, and HTML to style the web a little bit. For now the program seems to be only working on Tracks in input but not artist.
