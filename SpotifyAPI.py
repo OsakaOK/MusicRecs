@@ -28,18 +28,16 @@ def get_access_token(client_id, client_secret):
 
 # Function to search Spotify
 def search_spotify(access_token, query, search_type, limit=10):
-    search_url = (
-        f"https://api.spotify.com/v1/search?q={query}&type={search_type}&limit={limit}"
-    )
-    response = requests.get(
-        search_url, headers={"Authorization": "Bearer " + access_token}
-    )
+    search_url = "https://api.spotify.com/v1/search"
+    headers = {"Authorization": "Bearer " + access_token}
+    params = {"q": query, "type": search_type, "limit": limit}
 
+    response = requests.get(search_url, headers=headers, params=params)
     if response.status_code == 200:
         return response.json()
     else:
-        print("Failed to search Spotify")
-        return None
+        print(f"Spotify API Error: {response.status_code}, {response.text}")
+        return {}
 
 
 # Function to get track recommendations
@@ -89,14 +87,14 @@ def clean_track_data(tracks):
 def clean_artist_data(artists):
     cleaned_artists = []
     for artist in artists:
-        artist_info = {
-            "id": artist["id"],
-            "name": artist["name"],
-            "genres": artist["genres"],
-            "popularity": artist["popularity"],
-            "followers": artist["followers"]["total"],
-        }
-        cleaned_artists.append(artist_info)
+        cleaned_artists.append(
+            {
+                "id": artist["id"],
+                "name": artist["name"],
+                "genres": artist.get("genres", []),
+                "popularity": artist.get("popularity", 0),
+            }
+        )
     return cleaned_artists
 
 

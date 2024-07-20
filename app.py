@@ -39,17 +39,6 @@ def search():
     except ValueError:
         return jsonify({"error": "Search limit must be a valid integer."}), 400
 
-    # Validate recommend_limit
-    try:
-        recommend_limit = int(request.form["recommend_limit"])
-        if recommend_limit <= 0:
-            return (
-                jsonify({"error": "Recommend limit must be a positive integer."}),
-                400,
-            )
-    except ValueError:
-        return jsonify({"error": "Recommend limit must be a valid integer."}), 400
-
     if search_type not in ["track", "artist"]:
         return (
             jsonify(
@@ -71,7 +60,6 @@ def search():
         search_results = search_spotify(
             access_token, query, search_type, limit=search_limit
         )
-        print("Search Results:", search_results)  # Debugging line
         cache_search_results(db, search_type, query, search_limit, search_results)
 
     if (
@@ -99,6 +87,10 @@ def search():
 def recommend():
     item_type = request.form["item_type"]
     item_id = request.form["item_id"]
+
+    print(
+        f"Received request for recommendations: item_type={item_type}, item_id={item_id}"
+    )
 
     # Validate recommend_limit
     try:
@@ -132,7 +124,6 @@ def recommend():
 
     elif item_type == "artist":
         related_artists = get_related_artists(access_token, item_id, recommend_limit)
-        print("Related Artists:", related_artists)  # Debugging line
         if related_artists is None:
             return jsonify({"error": "Failed to fetch related artists."}), 500
         cleaned_related_artists = clean_artist_data(related_artists)
