@@ -28,4 +28,8 @@ Add flask to be able to run the web, and HTML to style the web a little bit. For
 
 _Update_
 
-Program can now both search for track and artist. then get recommendations, they have an option to see the searcb result and select which one they wants to get the recommend based on
+Program can now both search for track and artist. then get recommendations, they have an option to see the search result and select which one they wants to get the recommend based on
+
+_Update_
+
+improve webpage UI with CSS and bootstrap, and make it more responsive than before
