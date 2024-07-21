@@ -17,7 +17,7 @@ from SpotifyAPI import (
 
 app = Flask(__name__)
 
-# Ensure MongoDB connection
+# MongoDB connection
 db = connect_to_mongo()
 
 

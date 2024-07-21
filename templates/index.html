@@ -3,32 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Recommendation System</title>
+    <title>MusicRecs</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-    <h1>MusicRecs</h1>
-    <form id="search-form" action="/search" method="post">
-        <input type="text" name="query" placeholder="Track or artist name" required>
-        <select name="search_type">
-            <option value="track">Track</option>
-            <option value="artist">Artist</option>
-        </select>
-        <input type="number" name="search_limit" placeholder="Search Limit" required>
-        <input type="number" name="recommend_limit" id="recommend_limit" placeholder="Recommend Limit" required>
-        <button type="submit">Search</button>
-    </form>
-    
-    <h2>Search Results</h2>
-    <div id="results"></div>
+    <div class="container">
+        <h1 class="text-center my-4">MusicRecs</h1>
+        <form id="search-form" class="mb-4">
+            <div class="form-row">
+                <div class="col-md-5 mb-3">
+                    <input type="text" name="query" class="form-control" placeholder="Track or artist name" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <select name="search_type" class="form-control">
+                        <option value="track">Track</option>
+                        <option value="artist">Artist</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <input type="number" id="search_limit" name="search_limit" class="form-control" placeholder="Search Limit" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <input type="number" id="recommend_limit" name="recommend_limit" class="form-control" placeholder="Recommend Limit" required>
+                </div>
+                <div class="col-md-1 mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
+        
+        <h2>Search Results</h2>
+        <div id="results"></div>
 
-    <h2>Recommendations</h2> 
-    <div id="recommendations"></div>
+        <h2>Recommendations</h2> 
+        <div id="recommendations"></div>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         document.getElementById('search-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Clear previous recommendations
             document.getElementById('recommendations').innerHTML = '';
 
             let formData = new FormData(this);
@@ -39,7 +57,7 @@
             .then(response => response.json())
             .then(data => {
                 let resultsDiv = document.getElementById('results');
-                resultsDiv.innerHTML = ''; // Clear previous results
+                resultsDiv.innerHTML = ''; 
 
                 if (data.error) {
                     resultsDiv.innerHTML = `<p>${data.error}</p>`;
@@ -49,15 +67,23 @@
                         let resultItem = document.createElement('div');
                         if (searchType === 'track') {
                             resultItem.innerHTML = `
-                                <p><strong>${item.name}</strong> by ${item.artists.join(', ')}</p>
-                                <button onclick="getRecommendations('${item.id}', 'track')">Get Recommendations</button>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>${item.name}</strong> by ${item.artists.join(', ')}</p>
+                                        <button class="btn btn-secondary" onclick="getRecommendations('${item.id}', 'track')">Get Recommendations</button>
+                                    </div>
+                                </div>
                             `;
                         } else if (searchType === 'artist') {
                             resultItem.innerHTML = `
-                                <p><strong>${item.name}</strong></p>
-                                <p>Genres: ${item.genres.join(', ')}</p>
-                                <p>Popularity: ${item.popularity}</p>
-                                <button onclick="getRecommendations('${item.id}', 'artist')">Get Recommendations</button>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p><strong>${item.name}</strong></p>
+                                        <p>Genres: ${item.genres.join(', ')}</p>
+                                        <p>Popularity: ${item.popularity}</p>
+                                        <button class="btn btn-secondary" onclick="getRecommendations('${item.id}', 'artist')">Get Recommendations</button>
+                                    </div>
+                                </div>
                             `;
                         }
                         resultsDiv.appendChild(resultItem);
@@ -72,6 +98,8 @@
         function getRecommendations(itemId, itemType) {
             const recommendLimit = document.getElementById('recommend_limit').value;
             
+            console.log(`Getting recommendations for item_id: ${itemId}, itemType: ${itemType}, recommendLimit: ${recommendLimit}`);
+
             fetch('/recommend', {
                 method: 'POST',
                 body: new URLSearchParams({
@@ -83,7 +111,7 @@
             .then(response => response.json())
             .then(data => {
                 let recommendationsDiv = document.getElementById('recommendations');
-                recommendationsDiv.innerHTML = '';
+                recommendationsDiv.innerHTML = ''; 
                 if (data.error) {
                     recommendationsDiv.innerHTML = `<p>${data.error}</p>`;
                 } else {
@@ -96,6 +124,8 @@
                             recommendationsDiv.innerHTML += `<p>${index + 1}: ${item.name}</p>`;
                         });
                     }
+                    recommendationsDiv.scrollIntoView({ behavior: 'smooth' });
+
                 }
             })
             .catch(error => {
