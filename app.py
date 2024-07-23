@@ -1,3 +1,5 @@
+# Main function to run local website
+
 from flask import Flask, request, jsonify, render_template
 from SpotifyAPI import (
     get_access_token,
