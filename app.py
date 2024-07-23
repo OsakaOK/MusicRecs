@@ -14,6 +14,14 @@ from SpotifyAPI import (
     client_secret,
     connect_to_mongo,
 )
+from flask import Flask, request, jsonify, render_template
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+app = Flask(__name__)
+limiter = Limiter(
+    get_remote_address, app=app, default_limits=["200 per day", "50 per hour"]
+)
 
 app = Flask(__name__)
 
@@ -27,6 +35,7 @@ def index():
 
 
 @app.route("/search", methods=["POST"])
+@limiter.limit("10 per minute")
 def search():
     query = request.form["query"]
     search_type = request.form["search_type"]
@@ -84,6 +93,7 @@ def search():
 
 
 @app.route("/recommend", methods=["POST"])
+@limiter.limit("10 per minute")
 def recommend():
     item_type = request.form["item_type"]
     item_id = request.form["item_id"]

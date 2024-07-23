@@ -1,11 +1,13 @@
 import requests
 import base64
-import json
 from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
 
-client_id = "5ec05cefccd647058cffeac2d91dc387"
-client_secret = "65e2c4321945442ba9eed181ee529548"
-redirect_uri = "your_redirect_uri"
+load_dotenv()
+
+client_id = os.getenv("SPOTIFY_CLIENT_ID")
+client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 
 
 # Function to get access token
