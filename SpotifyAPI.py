@@ -1,3 +1,5 @@
+# Contain all search and recommendation functions
+
 import requests
 import base64
 from pymongo import MongoClient
