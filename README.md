@@ -1,35 +1,62 @@
-# MusicRecs
+# Music Recommendation System
 
-Music recommendation system using Public APIs from Spotify
+This is a Flask-based music recommendation system that uses the Spotify API.
 
-_Progress_
+## Features
 
-Add Spotify API where it contains function to get access token and function to fetch data from API
+- Search for tracks and artists
+- Get recommendations based on tracks and artists
 
-Add Main for testing function in SpotifyAPI
+## Requirements
 
-Add couple function to fetch data from API and test with input for program to give recommendation depends on the input
+- Python 3.x
+- Spotify Developer Account
 
-_NEW_
+## Installation
 
-CHANGED UP: now user can search up same track or artist name and have an option to choose which one they want to get recommendation based on. Also user can choose to the limit for search result and recommendations
+1. **Clone the repository**:
 
-_Update_
+   ```bash
+   git clone https://github.com/yourusername/MusicRecs.git
+   cd MusicRecs
+   ```
 
-improve the search display results to removed any duplicate tracks show up
+2. **Create a virtual environment**:
 
-_Update_
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
 
-Add in MongoDB to store the input from user to prevent the usage of API calls
+3. **Install the dependencies**:
 
-_Update_
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Add flask to be able to run the web, and HTML to style the web a little bit. For now the program seems to be only working on Tracks in input but not artist.
+4. **Set up the environment variables**:
 
-_Update_
+   - Create a `.env` file in the root directory of the project.
+   - Copy the contents of `.env.example` to `.env`.
+   - Fill in your Spotify Client ID and Client Secret in the `.env` file.
 
-Program can now both search for track and artist. then get recommendations, they have an option to see the search result and select which one they wants to get the recommend based on
+   ```plaintext
+   SPOTIFY_CLIENT_ID=your_spotify_client_id
+   SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+   ```
 
-_Update_
+5. **Run the application**:
 
-improve webpage UI with CSS and bootstrap, and make it more responsive than before
+   ```bash
+   flask run
+   ```
+
+6. **Open your browser**:
+   - Visit `http://127.0.0.1:5000` to use the application.
+
+## Usage
+
+- Enter the track or artist name in the search box.
+- Select the type (Track or Artist).
+- Click "Search" to get results.
+- Click "Get Recommendations" to get recommendations based on the selected track or artist.
